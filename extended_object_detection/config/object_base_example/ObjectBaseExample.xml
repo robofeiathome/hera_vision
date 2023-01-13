@@ -1,0 +1,401 @@
+<?xml version="1.0" ?>
+
+<AttributeLib>
+    
+    <Attribute Name="HSVColorBrightYellow" Type="HSVColor" Hmin="35" Hmax="103" Smin="104" Smax="255" Vmin="0" Vmax="255"/>
+    
+    <Attribute Name="HSVColorBlack" Type="HSVColor" Hmin="72" Hmax="179" Smin="19" Smax="101" Vmin="0" Vmax="111"/>
+    
+    <Attribute Name="HistColorPink" Type="HistColor" Histogram="histograms/Pink.yaml"/>
+    
+    <Attribute Name="HistColorBrightYellow" Type="HistColor" Histogram="histograms/BrightYellow.yaml"/>    
+    
+    <Attribute Name="HistColorOrange" Type="HistColor" Histogram="histograms/Orange.yaml">        
+        <Filter Type="Insider"/>
+    </Attribute>    
+
+    <Attribute Name="HistColorOrangeUpper" Type="HistColor" Histogram="histograms/Orange.yaml">        
+        <Filter Type="ROI" x="0" y="0" w="640" h="240"/>
+    </Attribute>    
+    
+    <Attribute Name="HistDarkRed" Type="HistColor" Histogram="histograms/DarkRed.yaml" Probability="0.4"/>    
+    
+    <Attribute Name="HistSkin" Type="HistColor" Histogram="histograms/Skin.yaml">    
+        <Clusterization Type="FOREL" R="100" eps="10"/>
+    </Attribute>
+    
+    <Attribute Name="BrightRed" Type="HistColor" Histogram="histograms/BrightRed.yaml">
+        <Filter Type="Insider"/>
+    </Attribute>
+    
+    <Attribute Name="NotFractal" Type="Size" MinAreaPc="0.5" MaxAreaPc="100"/>
+    
+    <Attribute Name="HaarFace" Type="HaarCascade" Cascade="cascades/mallick_haarcascade_frontalface_default.xml"/>
+    
+    <Attribute Name="HoughCircle" Type="Hough" HoughType="0" dp="1" md="10" p1="142" p2="30" mr="0" Mr="0"/>
+    
+    <Attribute Name="Square" Type="Dimension" minRatio="0.9" maxRatio="1.1"/>
+    
+    <Attribute Name="BasicMotion" Type="BasicMotion">
+        <Clusterization Type="FOREL" R="50" eps="15"/>
+    </Attribute>            
+  
+    <Attribute Name="Aruco4" Type="Aruco" Dict="0" Lenght="0.082"/>
+    
+    <Attribute Name="Aruco5" Type="Aruco" Dict="4" Lenght="0.082"/>
+    
+    <Attribute Name="Aruco6" Type="Aruco" Contour="true" Dict="8" Lenght="0.125"/>    
+    
+    <Attribute Name="Aruco7" Type="Aruco" Dict="12" Lenght="0.082"/>
+    
+    <Attribute Name="SocialRobotsCover" Type="Feature" featureExtractorType="SIFT" min_matches="100" height="0.215" sample_image="feature_samples/social_robots.jpg"/>
+    
+    <Attribute Name="Lower" Type="Pose" x_min="0" x_max="1" y_min="0.5" y_max="1"/>    
+    
+    <Attribute Name="COCO_Dnn" Type="Dnn" framework="tensorflow" weights="ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb" config="ssd_mobilenet_v1_coco_2017_11_17/config.pbtxt" labels="ssd_mobilenet_v1_coco_2017_11_17/mscoco_label_map.pbtxt" inputWidth="300" inputHeight="300" Probability="0.5" forceCuda="1"/>
+    
+    <Attribute Name="CupDnn" Type="Dnn" framework="tensorflow" weights="ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb" config="ssd_mobilenet_v1_coco_2017_11_17/config.pbtxt" labels="ssd_mobilenet_v1_coco_2017_11_17/mscoco_label_map.pbtxt" inputWidth="300" inputHeight="300" Probability="0.75" obj_id="47"/>    
+    
+    <Attribute Name="CnnUnfiltered" Type="Dnn" framework="tensorflow" weights="ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb" config="ssd_mobilenet_v1_coco_2017_11_17/config.pbtxt" labels="ssd_mobilenet_v1_coco_2017_11_17/mscoco_label_map.pbtxt" inputWidth="300" inputHeight="300" Probability="0.3" obj_id="-1"/>    
+
+    <Attribute Name="CnnFiltered" Type="Dnn" framework="tensorflow" weights="ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb" config="ssd_mobilenet_v1_coco_2017_11_17/config.pbtxt" labels="ssd_mobilenet_v1_coco_2017_11_17/mscoco_label_map.pbtxt" inputWidth="300" inputHeight="300" Probability="0.3" obj_id="-1">    
+        <Filter Type="NMS" threshold="0.5"/>
+    </Attribute>
+    
+    <Attribute Name="CnnPerson" Type="Dnn" framework="tensorflow" weights="ssd_mobilenet_v1_coco_2017_11_17/frozen_inference_graph.pb" config="ssd_mobilenet_v1_coco_2017_11_17/config.pbtxt" labels="ssd_mobilenet_v1_coco_2017_11_17/mscoco_label_map.pbtxt" inputWidth="300" inputHeight="300" Probability="0.5" obj_id="1"/> 
+    
+    <Attribute Name="QrcodeCV" Type="Qr"/>
+    
+    <Attribute Name="QrcodeZbar" Type="QR_ZBAR" Lenght="0.1" Info=""/> 
+    
+    <Attribute Name="RedCupViaAnd" Type="LogicAnd" iou="0.5" A="CupDnn" B="HistDarkRed"/>
+    
+    <Attribute Name="PinkOrOrange" Type="LogicOr" iou="0.5" A="HistColorPink" B="HistColorOrange"/>        
+    
+    <Attribute Name="PinkOrOrangeFiltered" Type="LogicOr" iou="0.5" A="HistColorPink" B="HistColorOrange">
+        <Filter Type="Insider"/>
+    </Attribute>
+    
+    <Attribute Name="NotRed" Type="LogicNot" A="HistDarkRed"/>
+    
+    <Attribute Name="MyBlobAttribute" Type="Blob" minThreshold="54" maxThreshold="125" blobColor="0" minArea="1500" minCircularity="0.03" minConvexity="0.64" minInertiaRatio="0.00"/>
+    
+    <Attribute Name="StickerRoughDist" Type="RoughDist" realWidth="0.075"/>
+    
+    <!--<Attribute Name="DepthKinect" Type="Depth" depthScale="0.001"/>-->
+    
+    <Attribute Name="DlibFace" Type="FaceDlib" Probability="0.4" base_file_path="face_recognition/base_faces.db" base_dir_path="face_recognition/base_faces/" sp_path="face_recognition/shape_predictor_5_face_landmarks.dat" net_path="face_recognition/dlib_face_recognition_resnet_model_v1.dat"/>
+    
+    <Attribute Name="ID13" Type="ExtractedInfoID" field="Aruco4:marker_id" allowed="13" forbidden=""/>
+    
+    <Attribute Name="COCO_cup" Type="ExtractedInfoID" field="COCO_Dnn:class_id" allowed="47" forbidden=""/>
+    
+    <Attribute Name="COCO_person" Type="ExtractedInfoString" field="COCO_Dnn:class_label" allowed="pers" partially="1"/>
+    
+    <Attribute Name="COCO_lifeforms" Type="ExtractedInfoString" field="COCO_Dnn:class_label" allowed="person bird cat dog horse sheep cow elephant bear zebra giraffe" partially="0"/>
+    
+    <Attribute Name="COCO_transport" Type="ExtractedInfoString" field="COCO_Dnn:class_label" allowed="bicycle car motorcycle airplane bus train truck boat" partially="0"/>
+    
+    <Attribute Name="COCO_dynamic" Type="LogicOr" A="COCO_lifeforms" B="COCO_transport"/>
+    
+    <Attribute Name="COCO_static" Type="LogicNot" A="COCO_dynamic"/>
+    
+</AttributeLib>
+
+<SimpleObjectBase>  
+      
+    <SimpleObject Name="YellowSticker" ID="1">              
+        <Attribute Type="Detect">HSVColorBrightYellow</Attribute>            
+    </SimpleObject>  
+    
+    <SimpleObject Name="PinkSticker" ID="2">              
+        <Attribute Type="Detect">HistColorPink</Attribute>  
+        <Attribute Type="Check">NotFractal</Attribute>
+    </SimpleObject>
+    
+    <SimpleObject Name="YellowStickerSquared" ID="3" Mode="Soft" Probability="0.5">              
+        <Attribute Type="Detect">HistColorBrightYellow</Attribute>
+        <Attribute Type="Check">Square</Attribute>                    
+    </SimpleObject>
+    
+    <SimpleObject Name="OrangeStickerBottom" ID="4">              
+        <Attribute Type="Detect">HistColorOrange</Attribute>  
+        <Attribute Type="Check">Lower</Attribute>
+    </SimpleObject>
+    
+    <SimpleObject Name="PinkOrOrangeSticker" ID="5">              
+        <Attribute Type="Detect">PinkOrOrange</Attribute>          
+    </SimpleObject>
+    
+    <SimpleObject Name="HistDarkRed" ID="6">              
+        <Attribute Type="Detect">HistDarkRed</Attribute>          
+    </SimpleObject>
+    
+    <SimpleObject Name="PinkStickerRoughDist" ID="7">              
+        <Attribute Type="Detect">HistColorPink</Attribute>  
+        <Attribute Type="Extract">StickerRoughDist</Attribute>
+    </SimpleObject>
+    
+    <SimpleObject Name="PinkOrOrangeStickerFiltered" ID="8">              
+        <Attribute Type="Detect">PinkOrOrangeFiltered</Attribute>          
+    </SimpleObject>
+    
+    <SimpleObject Name="OrangeStickerUpper" ID="9">              
+        <Attribute Type="Detect">HistColorOrangeUpper</Attribute>          
+    </SimpleObject>
+    
+    <SimpleObject Name="Face" ID="10">              
+        <Attribute Type="Detect">HaarFace</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Skin" ID="11">              
+        <Attribute Type="Detect">HistSkin</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="FaceRecognition1" ID="12">                      
+        <Attribute Type="Detect">DlibFace</Attribute>        
+    </SimpleObject>
+    
+    <SimpleObject Name="FaceRecognition2" ID="13">              
+        <Attribute Type="Detect">HaarFace</Attribute>        
+        <Attribute Type="Extract">DlibFace</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Circle" ID="20">              
+        <Attribute Type="Detect">HoughCircle</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="RedCircle" ID="21" Mode="Soft" Probability="1">       
+        <Tracker IOU="0.25" decay="0.01" soft_prob="0.5">NONE</Tracker>
+        <Attribute Type="Detect">HoughCircle</Attribute>
+        <Attribute Type="Detect">BrightRed</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Motion" ID="30" MergingPolicy="Intersection">              
+        <Attribute Type="Detect">BasicMotion</Attribute>            
+        <Attribute Type="Check">NotFractal</Attribute>
+    </SimpleObject>
+    
+    <SimpleObject Name="FaceInMotion" ID="31" MergingPolicy="Intersection" IOU="0.2">              
+        <Attribute Type="Detect">BasicMotion</Attribute>            
+        <Attribute Type="Check">NotFractal</Attribute>
+        <Attribute Type="Detect">HaarFace</Attribute>            
+    </SimpleObject>aruco_space
+    
+    <SimpleObject Name="Aruco4-13" ID="40">              
+        <Attribute Type="Detect">Aruco4</Attribute>
+        <Attribute Type="Check">ID13</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Aruco6" ID="41">              
+        <Attribute Type="Detect">Aruco6</Attribute>            
+    </SimpleObject>
+            
+    <SimpleObject Name="Aruco6Black" ID="42" Mode="Hard" Probability="0.5">              
+        <Attribute Type="Detect">Aruco6</Attribute>
+        <Attribute Type="Detect">HSVColorBlack</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="ArucoTrack" ID="43">              
+        <Attribute Type="Detect">Aruco6</Attribute>
+        <Tracker IOU="0.25" decay="0.01">MOSSE</Tracker>
+    </SimpleObject>
+    
+    <SimpleObject Name="Aruco4" ID="44">              
+        <Attribute Type="Detect">Aruco4</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Aruco5" ID="45">              
+        <Attribute Type="Detect">Aruco5</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="Aruco7" ID="46">              
+        <Attribute Type="Detect">Aruco7</Attribute>            
+    </SimpleObject>
+    
+    <SimpleObject Name="SocialRobotsBook" ID="50">              
+        <Attribute Type="Detect">SocialRobotsCover</Attribute>            
+        <Attribute Type="Check">NotFractal</Attribute>
+    </SimpleObject>
+      
+    <SimpleObject Name="COCO_dnn_object" ID="60">              
+        <Attribute Type="Detect">COCO_Dnn</Attribute>                    
+    </SimpleObject>
+    
+    <SimpleObject Name="RedCup" ID="61" Mode="Hard" MergingPolicy="Union">           
+        <Attribute Type="Detect">COCO_Dnn</Attribute>        
+        <Attribute Type="Check">COCO_cup</Attribute>
+        <Attribute Type="Detect">HistDarkRed</Attribute>                    
+        <Attribute Type="Check">NotFractal</Attribute>
+        
+    </SimpleObject>
+    
+    <SimpleObject Name="RedCup2" ID="62" Probability="0.5">                   
+        <Attribute Type="Detect">RedCupViaAnd</Attribute>        
+    </SimpleObject>            
+    
+    <SimpleObject Name="NotRedCup" ID="63" Probability="0.5" Mode="Soft">                   
+        <Attribute Type="Detect">CupDnn</Attribute>        
+        <Attribute Type="Check">NotRed</Attribute>        
+    </SimpleObject>            
+    
+    <SimpleObject Name="COCO_dnn_object_depth" ID="64">              
+        <Attribute Type="Detect">COCO_Dnn</Attribute>
+        <Attribute Type="Extract" Channel="DEPTH">DepthKinect</Attribute>                  
+    </SimpleObject>
+    
+    <SimpleObject Name="CnnUnfiltered" ID="65" Probability="0.3">              
+        <Attribute Type="Detect">CnnUnfiltered</Attribute>        
+    </SimpleObject>
+    
+    <SimpleObject Name="CnnFiltered" ID="66" Probability="0.3">              
+        <Attribute Type="Detect">CnnFiltered</Attribute>        
+    </SimpleObject>
+    
+    <SimpleObject Name="CnnPerson" ID="67">              
+        <Attribute Type="Detect">COCO_Dnn</Attribute>
+        <Attribute Type="Check">COCO_person</Attribute>                
+        
+    </SimpleObject>    
+    
+    <SimpleObject Name="RedCupFull" ID="68" Mode="Hard" MergingPolicy="Union">           
+        <Attribute Type="Detect">HistDarkRed</Attribute>                    
+        <Attribute Type="Check">NotFractal</Attribute>
+        <Attribute Type="Detect" Weight="2">CupDnn</Attribute>
+        <Attribute Type="Extract" Channel="DEPTH">DepthKinect</Attribute>
+        <Tracker IOU="0.25" decay="0.01">MOSSE</Tracker>
+    </SimpleObject>            
+        
+    
+    <SimpleObject Name="QRcode" ID="70">                   
+        <Attribute Type="Detect">QrcodeCV</Attribute>        
+    </SimpleObject>
+    
+    <SimpleObject Name="QRcodeZbar" ID="71">                   
+        <Attribute Type="Detect">QrcodeZbar</Attribute>        
+    </SimpleObject>
+    
+    <SimpleObject Name="COCO_dynamic" ID="72">              
+        <Attribute Type="Detect">COCO_Dnn</Attribute>   
+        <Attribute Type="Check">COCO_dynamic</Attribute>   
+    </SimpleObject>
+    
+    <SimpleObject Name="COCO_static" ID="73">              
+        <Attribute Type="Detect">COCO_Dnn</Attribute>      
+        <Attribute Type="Check">COCO_static</Attribute>   
+    </SimpleObject>
+    
+    <SimpleObject Name="BlobPingui" ID="80">                   
+        <Attribute Type="Detect">MyBlobAttribute</Attribute>        
+    </SimpleObject>    
+    
+</SimpleObjectBase>
+
+<RelationLib>    
+    <RelationShip Type="3DRange" Name="0.09" distLow="0.075" distHigh="0.11"/>        
+    <RelationShip Type="3DRange" Name="0.14" distLow="0.12" distHigh="0.18"/>   
+    
+    <RelationShip Type="SpaceIn" Name="in"/>
+    <RelationShip Type="SpaceLeft" Name="left"/>
+    <RelationShip Type="SpaceRight" Name="right"/>
+    <RelationShip Type="SpaceDown" Name="down"/>
+    <RelationShip Type="SpaceUp" Name="up"/>
+    
+    <RelationShip Type="LogicAnd" Name="up-right" A="up" B="right"/>
+    <RelationShip Type="LogicAnd" Name="up-left" A="up" B="left"/>
+    <RelationShip Type="LogicAnd" Name="bottom-right" A="down" B="right"/>
+    <RelationShip Type="LogicAnd" Name="bottom-left" A="down" B="left"/>
+        
+</RelationLib>
+
+<ComplexObjectBase>
+    <ComplexObject ID="1" Name="ArucoTriangle" Mode="soft" Probability="0.7">
+        <SimpleObject Class="Aruco6" InnerName="A6" Weight="2"/>
+        <SimpleObject Class="Aruco4" InnerName="A4-1"/>
+        <SimpleObject Class="Aruco4" InnerName="A4-2"/>
+        
+        <Relation Obj1="A4-1" Obj2="A4-2" Relationship="0.09" Weight="1"/>
+        <Relation Obj1="A4-1" Obj2="A6" Relationship="0.14"/>
+        <Relation Obj1="A4-2" Obj2="A6" Relationship="0.14"/>
+        
+    </ComplexObject>
+    
+    <ComplexObject ID="2" Name="ArucoLeft">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="left"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="3" Name="ArucoRight">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="right"/>        
+    </ComplexObject>
+        
+    <ComplexObject ID="4" Name="ArucoUp">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="up"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="5" Name="ArucoDown">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="down"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="6" Name="ArucoUpRight" Mode="soft" Probability="0.0">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="up-right"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="7" Name="ArucoUpLeft">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="up-left"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="8" Name="ArucoBottomRight">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="bottom-right"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="9" Name="ArucoBottomLeft">
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        
+        <Relation Obj1="A4" Obj2="A6" Relationship="bottom-left"/>        
+    </ComplexObject>
+    
+    <ComplexObject ID="10" Name="FacedPerson">
+        <SimpleObject Class="CnnPerson" InnerName="Person"/>
+        <SimpleObject Class="Face" InnerName="Face"/>
+        
+        <Relation Obj1="Face" Obj2="Person" Relationship="in"/>        
+        
+    </ComplexObject>
+    
+    <ComplexObject ID="20" Name="ArucoTriangle2">
+        <SimpleObject Class="Aruco4" InnerName="A4"/>
+        <SimpleObject Class="Aruco5" InnerName="A5"/>
+        <SimpleObject Class="Aruco6" InnerName="A6"/>
+        <SimpleObject Class="Aruco7" InnerName="A7"/>
+        
+        <Relation Obj1="A4" Obj2="A5" Relationship="right"/>
+        <Relation Obj1="A4" Obj2="A6" Relationship="up"/>
+        <Relation Obj1="A4" Obj2="A7" Relationship="up"/>
+        
+    </ComplexObject>
+            
+</ComplexObjectBase>
+
+    

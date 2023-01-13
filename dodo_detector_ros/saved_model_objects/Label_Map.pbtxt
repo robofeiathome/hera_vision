@@ -1,0 +1,95 @@
+item {
+    id: 1
+    display_name: "apple-fruits"
+}
+
+item {
+    id: 2
+    display_name: "banana-fruits"
+}
+
+item {
+    id: 3
+    display_name: "cornflakes-pantryitems"
+}
+
+item {
+    id: 4
+    display_name: "coconutwater-drinks"
+}
+
+item {
+    id: 5
+    display_name: "coke-drinks"
+}
+
+item {
+    id: 6
+    display_name: "cleaner-cleaningsupplies"
+}
+
+item {
+    id: 7
+    display_name: "cloth-cleaningsupplies"
+}
+
+item {
+    id: 8
+    display_name: "guarana-drinks"
+}
+
+item {
+    id: 9
+    display_name: "icetea-drinks"
+}
+
+item {
+    id: 10
+    display_name: "kiwi-fruits"
+}
+
+item {
+    id: 11
+    display_name: "mustard-pantryitems"
+}
+
+item {
+    id: 12
+    display_name: "orange-fruits"
+}
+
+item {
+    id: 13
+    display_name: "pringles-snacks"
+}
+
+item {
+    id: 14
+    display_name: "cookie-snacks"
+}
+
+item {
+    id: 15
+    display_name: "tunacan-pantryitems"
+}
+
+item {
+    id: 16
+    display_name: "sponge-cleaningsupplies"
+}
+
+item {
+    id: 17
+    display_name: "tomatosauce-pantryitems"
+}
+
+item {
+    id: 18
+    display_name: "tonic-drinks"
+}
+
+item {
+    id: 19
+    display_name: "englishsauce-pantryitems"
+}
+

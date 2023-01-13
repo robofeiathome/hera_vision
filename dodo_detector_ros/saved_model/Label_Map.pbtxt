@@ -1,0 +1,60 @@
+item {
+    id: 1
+    display_name: "bottle"
+}
+
+item {
+    id: 2
+    display_name: "box"
+}
+
+item {
+    id: 3
+    display_name: "cereal"
+}
+
+item {
+    id: 4
+    display_name: "coca"
+}
+
+item {
+    id: 5
+    display_name: "cola"
+}
+
+item {
+    id: 6
+    display_name: "cookie"
+}
+
+item {
+    id: 7
+    display_name: "juice"
+}
+
+item {
+    id: 8
+    display_name: "medicament"
+}
+
+item {
+    id: 9
+    display_name: "milk"
+}
+
+item {
+    id: 10
+    display_name: "snack"
+}
+
+item {
+    id: 11
+    display_name: "trash"
+}
+
+item {
+    id: 12
+    display_name: "veja"
+}
+
