@@ -13,7 +13,7 @@ from dodo_detector.detection import TFObjectDetectorV1, TFObjectDetectorV2, Keyp
 from dodo_detector_ros.msg import DetectedObject, DetectedObjectArray
 
 
-class Detector:
+class Detector: 
 
    def __init__(self):
       #  get label map and inference graph from params
@@ -131,6 +131,7 @@ class Detector:
                                                         DetectedObjectArray,
                                                         queue_size=10))
                rospy.loginfo('Created topic for filter [' + key + ']')
+               print(self._publishers)
 
       self._tfpub = tf.TransformBroadcaster()
       rospy.loginfo('Ready to detect!')
@@ -156,7 +157,7 @@ class Detector:
                # vectors from the camera link to the fixed frame
                if self._global_frame is not None:
                   (trans, _) = self._tf_listener.lookupTransform('/' + self._global_frame,
-                                                                 '/kinect_one_depth',
+                                                                 '/zed2_camera_center',
                                                                  rospy.Time(0))
 
                # convert image from the subscriber into an OpenCV image
@@ -233,7 +234,7 @@ class Detector:
                         # object tf (x, y, z) must be
                         # passed as (z,-x,-y)
                         object_tf = [point_z, -point_x, -point_y]
-                        frame = 'kinect_one_depth'
+                        frame = 'zed2_camera_center'
 
                         # translate the tf in regard to the fixed frame
                         if self._global_frame is not None:
