@@ -1,4 +1,9 @@
-# Yolov8_Tracking
+# Yolov8_Tracking e flow+track
+
+## Aviso 
+
+O arquivo que realiza o flow+track ainda está em desenvolvimento, portanto para evitar travamentos em suas maquinas, ou até maiores problemas, não o utilizem enquanto ele não estiver finalizado.
+Quando ele estiver funcionando sem maiores problemas eu irei atualizar esse readme e tambem irei adicionar suas dependencias no requirements.txt para facilitar o processo de instalação e uso.
 
 ## Descrição
 
