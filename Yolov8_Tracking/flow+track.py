@@ -1,6 +1,7 @@
 import argparse
 import cv2
 import os
+
 # limita o numero de processadores usados por pacotes pesados
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -14,9 +15,6 @@ import numpy as np
 from pathlib import Path
 import torch
 import torch.backends.cudnn as cudnn
-#from modified_flow import main
-import matplotlib.pyplot as plt
-from scipy.stats import mode
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # yolov8 strongsort root directory
@@ -46,6 +44,18 @@ from trackers.multi_tracker_zoo import create_tracker
 
 
 @torch.no_grad()
+
+#def calculate_centroid(bbox):
+#    x_min, y_min, x_max, y_max = bbox
+#    centroid_x = (x_min + x_max) / 2
+#    centroid_y = (y_min + y_max) / 2
+#    return centroid_x, centroid_y
+
+def calculate_centroid_x(bbox):
+    x_min, y_min, x_max, y_max = bbox
+    centroid_x = (x_min + x_max) / 2
+    return centroid_x
+
 def run(
         source='0',
         yolo_weights=WEIGHTS / 'yolov8m.pt',  # model.pt path(s),
@@ -81,26 +91,7 @@ def run(
         vid_stride=1,  # video frame-rate stride
         retina_masks=False,
 ):
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-rec', '--record', default=False, action='store_true', help='Record?')
-    parser.add_argument('-pscale', '--pyr_scale', default=0.5, type=float,
-                    help='Image scale (<1) to build pyramids for each image')
-    parser.add_argument('-l', '--levels', default=3, type=int, help='Number of pyramid layers')
-    parser.add_argument('-w', '--winsize', default=15, type=int, help='Averaging window size')
-    parser.add_argument('-i', '--iterations', default=3, type=int,
-                    help='Number of iterations the algorithm does at each pyramid level')
-    parser.add_argument('-pn', '--poly_n', default=5, type=int,
-                    help='Size of the pixel neighborhood used to find polynomial expansion in each pixel')
-    parser.add_argument('-psigma', '--poly_sigma', default=1.1, type=float,
-                    help='Standard deviation of the Gaussian that is used to smooth derivatives used as a basis for the polynomial expansion')
-    parser.add_argument('-th', '--threshold', default=10.0, type=float, help='Threshold value for magnitude')
-    parser.add_argument('-p', '--plot', default=False, action='store_true', help='Plot accumulators?')
-    parser.add_argument('-rgb', '--rgb', default=False, action='store_true', help='Show RGB mask?')
-    parser.add_argument('-s', '--size', default=10, type=int, help='Size of accumulator for directions map')
-    args = vars(parser.parse_args())
-    directions_map = np.zeros([args['size'], 5])
-
-
+    previous_centroid_x = 387.54083195327223
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
     is_file = Path(source).suffix[1:] in (VID_FORMATS)
@@ -254,13 +245,48 @@ def run(
                             im_gpu=torch.as_tensor(im0, dtype=torch.float16).to(device).permute(2, 0, 1).flip(0).contiguous() /
                             255 if retina_masks else im[i]
                         )
-                    
                     for j, (output) in enumerate(outputs[i]):
-                        
+                        bbox_dict = {}
                         bbox = output[0:4]
                         id = output[4]
+
+                        if id not in bbox_dict:
+                            bbox_dict[id] = []
+
+                        bbox_dict[id].append(bbox)
+
                         cls = output[5]
                         conf = output[6]
+
+                        id_to_find = 1
+
+                        #if id_to_find in bbox_dict:
+                            #bbox_history = bbox_dict[id_to_find]
+                            #print(f"Bbox history for ID {id_to_find}: {bbox_history}")
+                        #    bbox_values = bbox_dict[id_to_find][-1]  # Get the last entry in the list for the ID
+                        #    centroid = calculate_centroid_x(bbox_values)
+                        #    print(f"Centroid for ID {id_to_find}: {centroid}")
+                        #else:
+                        #    print(f"No bounding box history found for ID {id_to_find}")
+                        if id_to_find in bbox_dict:
+                            bbox_values = bbox_dict[id_to_find][-1]  # Get the last entry in the list for the ID
+                            current_centroid_x = calculate_centroid_x(bbox_values)
+                            print(f"Centroid for ID {id_to_find}: {current_centroid_x}")
+
+                            #if id_to_find in previous_centroid_x:
+                                # Compare the current and previous centroid_x values
+                            if current_centroid_x > previous_centroid_x:
+                                print(f"ID {id_to_find} is moving right")
+                            elif current_centroid_x < previous_centroid_x:
+                                print(f"ID {id_to_find} is moving left")
+                            else:
+                                print(f"ID {id_to_find} is not moving horizontally")
+
+                            # Update the previous centroid_x value for the ID
+                            previous_centroid_x = current_centroid_x
+
+                        else:
+                            print(f"No bounding box found for ID {id_to_find}")
 
                         if save_txt:
                             # to MOT format
@@ -294,103 +320,12 @@ def run(
                 
             # Stream results
             im0 = annotator.result()
-            cap = im0
-            frame=cap
-            if args['record']:
-                #h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                #w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                codec = cv2.VideoWriter_fourcc(*'MPEG')
-                #out = cv2.VideoWriter('out.avi', codec, 10.0, (w, h))
-
-            if args['plot']:
-                plt.ion()
-
-            frame_previous = cap
-            gray_previous = cv2.cvtColor(frame_previous, cv2.COLOR_BGR2GRAY)
-            hsv = np.zeros_like(frame_previous)
-            hsv[:, :, 1] = 255
-            param = {
-                'pyr_scale': args['pyr_scale'],
-                'levels': args['levels'],
-                'winsize': args['winsize'],
-                'iterations': args['iterations'],
-                'poly_n': args['poly_n'],
-                'poly_sigma': args['poly_sigma'],
-                'flags': cv2.OPTFLOW_LK_GET_MIN_EIGENVALS
-            }
-
-            
-
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            flow = cv2.calcOpticalFlowFarneback(gray_previous, gray, None, **param)
-            mag, ang = cv2.cartToPolar(flow[:, :, 0], flow[:, :, 1], angleInDegrees=True)
-            ang_180 = ang/2
-            gray_previous = gray
-                
-            move_sense = ang[mag > args['threshold']]
-            move_mode = mode(move_sense)[0]
-
-            if 10 < move_mode <= 100:
-                directions_map[-1, 0] = 1
-                directions_map[-1, 1:] = 0
-                directions_map = np.roll(directions_map, -1, axis=0)
-            elif 100 < move_mode <= 190:
-                directions_map[-1, 1] = 1
-                directions_map[-1, :1] = 0
-                directions_map[-1, 2:] = 0
-                directions_map = np.roll(directions_map, -1, axis=0)
-            elif 190 < move_mode <= 280:
-                directions_map[-1, 2] = 1
-                directions_map[-1, :2] = 0
-                directions_map[-1, 3:] = 0
-                directions_map = np.roll(directions_map, -1, axis=0)
-            elif 280 < move_mode or move_mode < 10:
-                directions_map[-1, 3] = 1
-                directions_map[-1, :3] = 0
-                directions_map[-1, 4:] = 0
-                directions_map = np.roll(directions_map, -1, axis=0)
-            else:
-                directions_map[-1, -1] = 1
-                directions_map[-1, :-1] = 0
-                directions_map = np.roll(directions_map, 1, axis=0)
-
-            if args['plot']:
-                plt.clf()
-                plt.plot(directions_map[:, 0], label='Down')
-                plt.plot(directions_map[:, 1], label='Right')
-                plt.plot(directions_map[:, 2], label='Up')
-                plt.plot(directions_map[:, 3], label='Left')
-                plt.plot(directions_map[:, 4], label='Waiting')
-                plt.legend(loc=2)
-                plt.pause(1e-5)
-                plt.show()
-
-            loc = directions_map.mean(axis=0).argmax()
-            if loc == 0:
-                text = 'Moving down'
-            elif loc == 1:
-                text = 'Moving to the right'
-            elif loc == 2:
-                text = 'Moving up'
-            elif loc == 3:
-                text = 'Moving to the left'
-            else:
-                text = 'WAITING'
-
-            hsv[:, :, 0] = ang_180
-            hsv[:, :, 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
-            rgb = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-
-            frame = cv2.flip(frame, 1)
-            cv2.putText(frame, text, (30, 90), cv2.FONT_HERSHEY_COMPLEX, frame.shape[1] / 500, (0, 0, 255), 2)
-
-            
             if show_vid:
                 if platform.system() == 'Linux' and p not in windows:
                     windows.append(p)
                     cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
-                cv2.imshow(str(p), frame_previous)
+                cv2.imshow(str(p), im0)
                 if cv2.waitKey(1) == ord('q'):  # 1 millisecond
                     exit()
 
@@ -470,7 +405,6 @@ def parse_opt():
     parser.add_argument('--dnn', action='store_true', help='use OpenCV DNN for ONNX inference')
     parser.add_argument('--vid-stride', type=int, default=1, help='video frame-rate stride')
     parser.add_argument('--retina-masks', action='store_true', help='whether to plot masks in native resolution')
-    
     opt = parser.parse_args()
     opt.imgsz *= 2 if len(opt.imgsz) == 1 else 1  # expand
     opt.tracking_config = ROOT / 'trackers' / opt.tracking_method / 'configs' / (opt.tracking_method + '.yaml')
