@@ -91,7 +91,8 @@ def run(
         vid_stride=1,  # video frame-rate stride
         retina_masks=False,
 ):
-    previous_centroid_x = 387.54083195327223
+    val_correc=4.5 # valor de correcao, usar entre 2.5 e 5
+    previous_centroid_x = 387.54083195327223 # valor inicial do centroide (apenas para o primeiro frame a passar do flow, depois e corrigido)
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
     is_file = Path(source).suffix[1:] in (VID_FORMATS)
@@ -275,7 +276,9 @@ def run(
 
                             #if id_to_find in previous_centroid_x:
                                 # Compare the current and previous centroid_x values
-                            if current_centroid_x > previous_centroid_x:
+                            if current_centroid_x-previous_centroid_x <val_correc and  current_centroid_x-previous_centroid_x > -val_correc :
+                                print(f"ID {id_to_find} is moving foward")
+                            elif current_centroid_x > previous_centroid_x:
                                 print(f"ID {id_to_find} is moving right")
                             elif current_centroid_x < previous_centroid_x:
                                 print(f"ID {id_to_find} is moving left")
