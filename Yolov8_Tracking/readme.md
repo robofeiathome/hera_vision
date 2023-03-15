@@ -2,8 +2,7 @@
 
 ## Aviso 
 
-O arquivo que realiza o flow+track ainda está em desenvolvimento, portanto para evitar travamentos em suas maquinas, ou até maiores problemas, não o utilizem enquanto ele não estiver finalizado.
-Quando ele estiver funcionando sem maiores problemas eu irei atualizar esse readme e tambem irei adicionar suas dependencias no requirements.txt para facilitar o processo de instalação e uso.
+O arquivo responsável pela funcionalidade de track+flow ainda está em desenvolvimento. No entanto, os bugs que faziam com que o programa e o computador travassem foram resolvidos. Ele não apresenta mais riscos às máquinas. No entanto, suas funcionalidades ainda não estão bem refinadas e algumas implementações ainda estão pendentes.
 
 ## Descrição
 
