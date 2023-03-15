@@ -91,7 +91,7 @@ def run(
         vid_stride=1,  # video frame-rate stride
         retina_masks=False,
 ):
-    val_correc=4.5 # valor de correcao, usar entre 2.5 e 5
+    val_correc=1.5 # valor de correcao, usar entre 0.5 e 2.5
     previous_centroid_x = 387.54083195327223 # valor inicial do centroide (apenas para o primeiro frame a passar do flow, depois e corrigido)
     source = str(source)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
