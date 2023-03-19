@@ -274,22 +274,26 @@ def run(
                             current_centroid_x = calculate_centroid_x(bbox_values)
                             print(f"Centroid for ID {id_to_find}: {current_centroid_x}")
 
-                            #if id_to_find in previous_centroid_x:
-                                # Compare the current and previous centroid_x values
+                        #if id_to_find in previous_centroid_x:
+                            # Compare the current and previous centroid_x values
                             if current_centroid_x-previous_centroid_x <val_correc and  current_centroid_x-previous_centroid_x > -val_correc :
-                                print(f"ID {id_to_find} is moving foward")
+                                print(f'ID {id_to_find} is moving foward')
+                                direction=('foward')
                             elif current_centroid_x > previous_centroid_x:
-                                print(f"ID {id_to_find} is moving right")
+                                print(f'ID {id_to_find} is moving right')
+                                direction=('right')
                             elif current_centroid_x < previous_centroid_x:
-                                print(f"ID {id_to_find} is moving left")
+                                print(f'ID {id_to_find} is moving left')
+                                direction=('left')
                             else:
-                                print(f"ID {id_to_find} is not moving horizontally")
+                                print(f'ID {id_to_find} is not moving horizontally')
+                                direction=('unknow')
 
                             # Update the previous centroid_x value for the ID
                             previous_centroid_x = current_centroid_x
 
                         else:
-                            print(f"No bounding box found for ID {id_to_find}")
+                            print(f'No bounding box found for ID {id_to_find}')
 
                         if save_txt:
                             # to MOT format
@@ -323,11 +327,15 @@ def run(
                 
             # Stream results
             im0 = annotator.result()
+            # Flow results
+            direction_text = f'Direction: {direction}'
+            cv2.putText(im0, direction_text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
             if show_vid:
                 if platform.system() == 'Linux' and p not in windows:
                     windows.append(p)
                     cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
                     cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
+                    
                 cv2.imshow(str(p), im0)
                 if cv2.waitKey(1) == ord('q'):  # 1 millisecond
                     exit()
@@ -392,7 +400,7 @@ def parse_opt():
     parser.add_argument('--save-vid', action='store_true', help='save video tracking results')
     parser.add_argument('--nosave', action='store_true', help='do not save images/videos')
     # class 0 is person, 1 is bycicle, 2 is car... 79 is oven
-    parser.add_argument('--classes', nargs='+', type=int, help='filter by class: --classes 0, or --classes 0 2 3')
+    parser.add_argument('--classes', nargs='+', type=int, default=0, help='filter by class: --classes 0, or --classes 0 2 3')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
     parser.add_argument('--augment', action='store_true', help='augmented inference')
     parser.add_argument('--visualize', action='store_true', help='visualize features')
