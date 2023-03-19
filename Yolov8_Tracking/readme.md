@@ -2,7 +2,7 @@
 
 ## Aviso 
 
-O arquivo responsável pela funcionalidade de track+flow ainda está em desenvolvimento. No entanto, os bugs que faziam com que o programa e o computador travassem foram resolvidos. Ele não apresenta mais riscos às máquinas. No entanto, suas funcionalidades ainda não estão bem refinadas e algumas implementações ainda estão pendentes.
+O arquivo responsável pela funcionalidade de track+flow ainda está em desenvolvimento. No entanto, agora, o flow está funcionando sem erros maiores, mas ainda preciso adicionar algumas coisas para que ele funcione em todo o seu potencial. Algumas melhorias estão a caminho e em breve serão adicionadas a este Git.
 
 ## Descrição
 
